@@ -5,17 +5,20 @@ class User(db.Model, UserMixin):
     # required for flask security
     id = db.Column(db.Integer,primary_key = True)
     email = db.Column(db.String, unique = True, nullable = False)
+    username = db.Column(db.String, unique = True, nullable = False)
     password = db.Column(db.String, nullable = False)
     fs_uniquifier = db.Column(db.String, unique = True, nullable = False) # This is used to create a token. It gives access to particular users 
     active = db.Column(db.Boolean, nullable = False) # Helps in admin control
-    roles = db.relationship("Role", backref = 'bearer', secondary = "")
+    roles = db.relationship('Role', backref = 'bearer', secondary = 'users_roles')
+    # Here secondary = users_roles  refers to where exactly my association is stored
 
 class Role(db.Model, RoleMixin):
     id = db.Column(db.Integer,primary_key = True)
     name = db.Column(db.String, unique = True, nullable = False)
     description = db.Column(db.String)
 
-class UserRole(db.Model):
+class UsersRoles(db.Model):
     id = db.Column(db.Integer,primary_key = True)
-    user_id = db.Column(db.Integer,db.ForeignKey('user_id'))
-    role_id = db.Column(db.Integer,db.ForeignKey('role_id'))
+    user_id = db.Column(db.Integer,db.ForeignKey('user.id'))
+    role_id = db.Column(db.Integer,db.ForeignKey('role.id'))
+    
