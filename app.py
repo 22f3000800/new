@@ -2,6 +2,7 @@ from flask import Flask
 from application.database import db
 from application.models import User, Role
 from application.config import LocalDevelopmentConfig
+from application.resources import api
 # The following two are like API's created in flask_security
 ## SQLAlchemyUserDataStore helps us to configure the datastore with the user model and datastore can be used as a function
 from flask_security import Security, SQLAlchemyUserDatastore
@@ -13,6 +14,8 @@ def create_app():
     app.config.from_object(LocalDevelopmentConfig)
     # Connect to database
     db.init_app(app)
+    # Connect to restful api
+    api.init_app(app)
     # Connect to security
     datastore = SQLAlchemyUserDatastore(db, User, Role)
     app.security = Security(app, datastore)
@@ -34,10 +37,16 @@ with app.app_context():
 
     # Creating admin object
     if not app.security.datastore.find_user(email = "user0@admin.com"):
-        app.security.datastore.create_user(email = "user0@admin.com", username = "admin01", password = hash_password("1234"), roles = ['admin', 'user'])
+        app.security.datastore.create_user(email = "user0@admin.com",
+                                           username = "admin01",
+                                           password = hash_password("1234"),
+                                           roles = ['admin'])
     # Creating user object
     if not app.security.datastore.find_user(email = "user1@user.com"):
-        app.security.datastore.create_user(email = "user1@user.com", username = "user01", password = hash_password("1234"), roles = ['user'])
+        app.security.datastore.create_user(email = "user1@user.com", 
+                                           username = "user01", 
+                                           password = hash_password("1234"), 
+                                           roles = ['user'])
     #For these two user objects to be added to the dtabase
     db.session.commit()
 
