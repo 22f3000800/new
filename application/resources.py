@@ -1,6 +1,6 @@
 # This is where we create our RESTFUL api
 
-from flask_restful import Api, Resource, recparse
+from flask_restful import Api, Resource, reqparse
 from .models import *
 from flask_security import current_user, auth_required, roles_required, roles_accepted
 
@@ -12,7 +12,7 @@ def roles_list(roles):
         role_list.append(role.name)
     return role_list
 
-parser = recparse.RequestParser()
+parser = reqparse.RequestParser()
 
 parser.add_argument('name')
 parser.add_argument('type')
@@ -79,4 +79,40 @@ class TransApi(Resource):
                 "message" : " One or more required fields are missing"
             }, 400
 
-api.add_resource(TransApi, '/api/get','/api/create')
+    @auth_required('token')
+    @roles_required('user')   
+    def put(self, trans_id): #update
+        args = parser.parser_args() # everything provided in the request body comes here in the form of a dictionary
+        if args['name'] == None:
+            return{
+                "message" : "Name is required"
+            }, 400
+        trans = Transaction.query.get(trans_id) # Here get is used because we are using the primary key(trans_id) here to search by. If we were not using the primary key , we should use filter_by
+        trans.name = args['name'] # Here trans is an object, the rest is a dictionary in which name is the key and "args['name']" is the value 
+        trans.type = args['type']
+        trans.date = args['date']
+        trans.source = args['source']
+        trans.destination = args['destination']
+        trans.description = args['description']
+        db.session.commit() # I don't need to app because this is an update api
+        return{
+            "message" : "Tansaction updated successfully"
+        }
+    
+    @auth_required('token')
+    @roles_required('user')
+    def delete(self, trans_id):
+        # Retrieve transaction data using trans_id
+        trans = Transaction.query.get(trans_id)
+        if trans:
+            db.session.delete(trans)
+            db.session.commit()
+            return {
+                "message" : "transaction deleted successfully"
+            }
+        else:
+            return{
+                "message" : "Transaction not found "
+            }, 404
+
+api.add_resource(TransApi, '/api/get','/api/create','/api/update<int:trans_id>','/api/delete<int:trans_id>')
