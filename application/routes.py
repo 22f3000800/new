@@ -1,14 +1,14 @@
 from .database import db
 from .models import User, Role, Transaction
 from flask import current_app as app, jsonify, request, render_template
-from flask_security import hash_password, auth_required, roles_required, current_user, login_user, verify_password
+from flask_security import hash_password, auth_required, roles_required, current_user, login_user, verify_password, roles_accepted
 from werkzeug.security import check_password_hash, generate_password_hash
-from passlib.context import CryptContext
+from .utils import roles_list
 
 @ app.route('/', methods = ['GET'])
 def home():
     return render_template('index.html')
-
+'''
 @app.route('/api/admin') # admin dashboard
 @auth_required('token') # Authentication
 @roles_required("admin") # RBAC / Authorization
@@ -16,16 +16,16 @@ def admin_home():
     return jsonify ({
         "message" : "Admin logged in successfully"
     })
-
+'''
 @app.route('/api/home') # user dashboard
 @auth_required('token')
-@roles_required('user') 
+@roles_accepted('user','admin') 
 def user_home():
     user = current_user #current_user fetches the current user from the session 
     return jsonify({
         "username": user.username,
         "email": user.email,
-        "password": user.password
+        "roles": roles_list(user.roles)
     })
 
 @app.route('/api/login', methods=['POST'])

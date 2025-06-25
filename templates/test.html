@@ -7,17 +7,122 @@
 </div>
 
 
-<div>
-    <h2 class="text-center"> Login</h2>
-    <div>
-        <label for="email">Enter your email</label>
-        <input type="text" id="email" v-model="email">
-    </div>
-    <div>
-        <label for="pass">Enter your password</label>
-        <input type="text" id="pass" v-model="password">
-    </div>
-    <div>
-        <button class="btn btn-primary" @click="loginUser"> Login</button>
+<div>    
+    <h3> Welcome {{userData.username}}</h3>
+        <div class = "row border">
+            <div class = "col-8 border" style ="height: 750px;">
+                
+            </div>
+            <div class = "col-4 border" style ="height: 750px;">
+                
+            </div>
+        </div>
+</div>
+
+<div v-for="for t in transaction" class="card">
+    <div class="card-body">
+        <h5 class="card-title"> {{t.name}} <span class="badge text-white bg-secondary"> {{t.type}} </span></h5>
+        <p class="card-text"> Created at : {{t.date}} </p>
+        <p class="card-text"> Delivery : {{t.delivery}} </p>
+        <p class="card-text"> About : {{t.description}} </p>
+        <p class="card-text"> From {{t.source}} to {{t.destination}} </p>
+        <p class="card-text"> Amount : {{t.amount}} </p>
     </div>
 </div>
+
+
+<div class="mb-3">
+    <label for="name" class="form-label"> Transaction name</label>
+    <input type="text" class="form-control" id="name" v-model="transData.name">
+</div>
+<div class="mb-3">
+    <label for="type" class="form-label"> Transaction type</label>
+    <input type="text" class="form-control" id="type" v-model="transData.type">
+</div>
+<div class="mb-3">
+    <label for="source" class="form-label"> Source City</label>
+    <select class="form-select" aria-label="Default select example" v-model="transData.source">
+        <option selected>Open this select menu</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Nagpur">Nagpur</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Delhi"> Delhi</option>
+        <option value="Kolkata">Kolkata</option>
+    </select>
+</div>
+<div>
+    <label for="destination" class="form-label"> Destination City</label>
+    <select class="form-select" aria-label="Default select example" v-model="transData.destination">
+        <option selected>Open this select menu</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Nagpur">Nagpur</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Delhi"> Delhi</option>
+        <option value="Kolkata">Kolkata</option>
+    </select>
+</div>
+<div class="mb-3">
+    <label for="desc" class="form-label">Description</label>
+    <textarea class="form-control" id="desc" rows="3" v-model="transData.desc"></textarea>
+</div>
+<div class="mb-3 text-end">
+    <button class="btn btn-primary"> Create + </button>
+</div>
+
+
+
+<div>
+    <h2 class="my-2">Update your transaction</h2>
+    <div class = "col-4 border" style ="height: 750px;">
+        <h2> Create Transactions </h2>    
+        <div class="mb-3">
+            <label for="name" class="form-label"> Transaction name</label>
+            <input type="text" class="form-control" id="name" v-model="transData.name">
+        </div>
+        <div class="mb-3">
+            <label for="type" class="form-label"> Transaction type</label>
+            <input type="text" class="form-control" id="type" v-model="transData.type">
+        </div>
+        <div class="d-flex">
+            <div class="mb-3 mx-2">
+                <label for="source" class="form-label"> Source City</label>
+                <select class="form-select" aria-label="Default select example" v-model="transData.source">
+                    <option selected>Open this select menu</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Nagpur">Nagpur</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Delhi"> Delhi</option>
+                    <option value="Kolkata">Kolkata</option>
+                </select>
+            </div>
+            <div>
+                <label for="destination" class="form-label"> Destination City</label>
+                <select class="form-select" aria-label="Default select example" v-model="transData.destination">
+                    <option selected>Open this select menu</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Nagpur">Nagpur</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Delhi"> Delhi</option>
+                    <option value="Kolkata">Kolkata</option>
+                </select>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="desc" class="form-label">Description</label>
+            <textarea class="form-control" id="desc" rows="3" v-model="transData.desc"></textarea>
+        </div>
+        <div class="mb-3 text-end">
+            <button @click="createTrans" class="btn btn-primary"> Create + </button>
+        </div>
+    </div>
+</div>
+
+
+<table>
+    <thead>
+
+    </thead>
+    <tbody>
+        
+    </tbody>
+</table>

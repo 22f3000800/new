@@ -5,15 +5,15 @@ export default{
             <div class = "border mx-auto mt-5" style ="height: 400px;width : 300px">
                 <div>
                     <h2 class="text-center"> Login</h2>
-                    <div>
-                        <label for="email">Enter your email</label>
-                        <input type="text" id="email" v-model="formData.email" class="form-control">
+                    <div class="mx-2 mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" v-model="formData.email" placeholder="name@example.com">
                     </div>
-                    <div class="mt-3">
-                        <label for="pass">Enter your password</label>
-                        <input type="password" id="pass" v-model="formData.password" class="form-control">
+                    <div class="mx-2 mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" v-model="formData.password">
                     </div>
-                    <div class="mt-4">
+                    <div class="mx-2 mb-3 text-center">
                         <button class="btn btn-primary" @click="loginUser"> Login</button>
                     </div>
                     <!-- IMPORTANT: Add this div to display messages -->
@@ -84,8 +84,8 @@ export default{
                     this.messageClass = "text-success";
 
                     // --- Role-based Redirection Logic ---
-                    if (data.roles && data.roles.includes('admin')) {
-                        this.$router.push('/admin-dashboard'); // Redirect admin users
+                    if (data.roles.includes('admin')) {
+                        this.$router.push('/admin-dashboard'); // Redirect admin users like redirect('/admin_dashboard')
                     } else if (data.roles && data.roles.includes('user')) {
                         this.$router.push('/user-dashboard'); // Redirect regular users
                     } else {

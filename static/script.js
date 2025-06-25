@@ -11,7 +11,8 @@ import Register from "./components/Register.js";
 import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
 import Dashboard from "./components/Dashboard.js";
-import AdminDashboard from "./components/Admin_Dashboard.js"
+import AdminDashboard from "./components/Admin_Dashboard.js";
+import Update from "./components/Update.js";
 
 // 1. Define your routes for Vue Router 4
 const routes = [
@@ -19,7 +20,8 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/register', component: Register },
     { path: '/user-dashboard', component: Dashboard},
-    { path: '/admin-dashboard', component: AdminDashboard, meta: { requiresAuth: true, roles: ['admin'] }}
+    { path: '/admin-dashboard', component: AdminDashboard},
+    { path:'/update/:id',name: 'update',component : Update}
 ];
 
 // 2. Create the router instance for Vue Router 4

@@ -1,90 +1,130 @@
-export default {
-    template: `
-    <div class="container mt-4">
-        <h2 class="text-center mb-4">Admin Dashboard</h2>
-        <div v-if="loading" class="text-center">Loading admin data...</div>
-        <div v-if="error" class="alert alert-danger">{{ error }}</div>
-        
-        <div v-if="!loading && !error">
-            <h3 class="mb-3">All Users</h3>
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Email</th>
-                        <th>Username</th>
-                        <th>Active</th>
-                        <th>Roles</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="user in users" :key="user.id">
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.active ? 'Yes' : 'No' }}</td>
-                        <td>{{ user.roles.join(', ') }}</td>
-                    </tr>
-                    <tr v-if="users.length === 0">
-                        <td colspan="5" class="text-center">No users found.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    `,
-    data() {
+export default{
+    template : `
+    <div>    
+        <h3 class="my-2"> Welcome {{userData.username}}</h3>
+            <div class = "row border">
+                <div class = "col-8 border" style ="height: 750px; overflow-y : scroll">
+                    <h2> Requested Transactions </h2>
+                    <div v-for="t in transactions" class="card mt-2">
+                        <table>
+                            <thead>
+
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <h2> Pending Transactions </h2>
+                    <div v-for="t in transactions" class="card mt-2">
+                        <table>
+                            <thead>
+
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <h2> Paid Transactions </h2>
+                    <div v-for="t in transactions" class="card mt-2">
+                        <table>
+                            <thead>
+
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class = "col-4 border" style ="height: 750px;">
+                    <h2> Create Transactions </h2>    
+                    <div class="mb-3">
+                        <label for="name" class="form-label"> Transaction name</label>
+                        <input type="text" class="form-control" id="name" v-model="transData.name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="type" class="form-label"> Transaction type</label>
+                        <input type="text" class="form-control" id="type" v-model="transData.type">
+                    </div>
+                    <div class="d-flex">
+                        <div class="mb-3 mx-2">
+                            <label for="source" class="form-label"> Source City</label>
+                            <select class="form-select" aria-label="Default select example" v-model="transData.source">
+                                <option selected>Open this select menu</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Nagpur">Nagpur</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Delhi"> Delhi</option>
+                                <option value="Kolkata">Kolkata</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="destination" class="form-label"> Destination City</label>
+                            <select class="form-select" aria-label="Default select example" v-model="transData.destination">
+                                <option selected>Open this select menu</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Nagpur">Nagpur</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Delhi"> Delhi</option>
+                                <option value="Kolkata">Kolkata</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="desc" class="form-label">Description</label>
+                        <textarea class="form-control" id="desc" rows="3" v-model="transData.desc"></textarea>
+                    </div>
+                    <div class="mb-3 text-end">
+                        <button @click="review" class="btn btn-primary"> Create + </button>
+                    </div>
+                </div>
+            </div>
+    </div>` ,
+    data : function(){
         return {
-            users: [],
-            loading: true,
-            error: null,
-        };
-    },
-    // The created lifecycle hook is called after the instance is created
-    // but before it's mounted to the DOM. This is a good place to fetch data.
-    created() {
-        this.fetchAdminData();
-    },
-    methods: {
-        fetchAdminData() {
-            this.loading = true;
-            this.error = null;
-            const authToken = localStorage.getItem('auth-token');
-
-            if (!authToken) {
-                this.error = "Authentication token not found. Please log in.";
-                this.loading = false;
-                this.$router.push('/login'); // Redirect to login if no token
-                return;
+            userData : "",
+            transactions : null,
+            transData : {
+                name : '',
+                type : '',
+                source : '',
+                destination :'',
+                desc : ''
             }
-
-            fetch('/api/admin', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authentication-Token': authToken // Send the token
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    // Handle non-200 responses (e.g., 401 Unauthorized, 403 Forbidden)
-                    return response.json().then(errData => {
-                        throw new Error(errData.message || 'Failed to fetch admin data.');
-                    });
-                }
-            })
-            .then(data => {
-                console.log("Admin Data:", data);
-                this.users = data.users || []; // Assuming backend sends 'users' array
-                this.loading = false;
-            })
-            .catch(error => {
-                console.error("Error fetching admin data:", error);
-                this.error = error.message || "An error occurred while fetching data.";
-                this.loading = false;
-            });
         }
-    }
-};
+    },
+    mounted(){
+        this.loadUser()
+        this.loadTrans()
+    },
+        methods:{
+            loadUser(){
+                fetch ('/api/home',{
+                    method : 'GET',
+                    headers : {
+                        "Content-Type": "applocation.json",
+                        "Authentication-Token": localStorage.getItem("auth-token")
+                    }
+                })
+                .then(response => response.json())
+                .then(data => this.userData = data)
+            },
+            loadTrans(){
+                fetch('/api/get',{ // This is to get transaction data
+                method : 'GET',
+                headers : {
+                    "Content-Type": "applocation.json",
+                    "Authentication-Token": localStorage.getItem("auth-token")
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.transactions = data})
+            },
+            review(){
+
+            }
+        }
+}   
